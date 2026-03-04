@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fewron（フューロン）| 地元の商売を、もっと強く。</title>
+<meta name="description" content="地域の飲食店・整体・小売店のWebサイト制作。月額4,980円。LINEで修正依頼OK。AIが集客課題を分析します。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–cream: #FAF7F2;
+–warm-white: #FFFEF9;
+–paper: #F5F0E8;
+–tan: #E8DDD0;
+–brown-light: #C4A882;
+–brown: #8B6F47;
+–brown-dark: #5C4430;
+–charcoal: #1E1A16;
+–ink: #2D2620;
+–forest: #2D4A3E;
+–forest-light: #3D6B5A;
+–gold: #C9A84C;
+–gold-light: #E8C97A;
+–red-accent: #C0392B;
+–font-serif: ‘Noto Serif JP’, serif;
+–font-sans: ‘DM Sans’, sans-serif;
+–radius-sm: 6px;
+–radius: 12px;
+–radius-lg: 24px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+font-family: var(–font-sans);
+background: var(–cream);
+color: var(–ink);
+overflow-x: hidden;
+cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor {
+width: 12px; height: 12px;
+background: var(–forest);
+border-radius: 50%;
+position: fixed;
+pointer-events: none;
+z-index: 9999;
+transform: translate(-50%, -50%);
+transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+mix-blend-mode: multiply;
+}
+.cursor-ring {
+width: 36px; height: 36px;
+border: 1.5px solid var(–brown);
+border-radius: 50%;
+position: fixed;
+pointer-events: none;
+z-index: 9998;
+transform: translate(-50%, -50%);
+transition: all 0.2s ease;
+opacity: 0.6;
+}
+body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; background: var(–gold); }
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width: 52px; height: 52px; border-color: var(–gold); opacity: 0.4; }
+
+/* ── NOISE TEXTURE overlay ── */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 1000;
+opacity: 0.5;
+}
+
+/* ── NAV ── */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 500;
+padding: 0 48px;
+height: 72px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+transition: all 0.5s ease;
+}
+nav.scrolled {
+background: rgba(250,247,242,0.92);
+backdrop-filter: blur(16px);
+border-bottom: 1px solid var(–tan);
+height: 60px;
+}
+.nav-logo {
+font-family: var(–font-serif);
+font-size: 1.4rem;
+font-weight: 700;
+color: var(–charcoal);
+text-decoration: none;
+letter-spacing: 0.02em;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.nav-logo-mark {
+width: 32px; height: 32px;
+background: var(–forest);
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(–gold-light);
+font-size: 0.75rem;
+font-weight: 700;
+letter-spacing: 0.05em;
+font-family: var(–font-sans);
+}
+.nav-links {
+display: none;
+gap: 36px;
+list-style: none;
+}
+@media(min-width:768px){ .nav-links { display: flex; } }
+.nav-links a {
+font-size: 0.85rem;
+color: var(–brown-dark);
+text-decoration: none;
+letter-spacing: 0.04em;
+transition: color 0.2s;
+position: relative;
+}
+.nav-links a::after {
+content: ‘’;
+position: absolute;
+bottom: -3px; left: 0;
+width: 0; height: 1px;
+background: var(–forest);
+transition: width 0.3s ease;
+}
+.nav-links a:hover { color: var(–forest); }
+.nav-links a:hover::after { width: 100%; }
+.nav-btn {
+background: var(–forest);
+color: var(–cream);
+padding: 10px 24px;
+border-radius: 100px;
+font-size: 0.82rem;
+font-weight: 500;
+letter-spacing: 0.05em;
+text-decoration: none;
+transition: background 0.25s, transform 0.2s;
+border: none;
+cursor: pointer;
+font-family: var(–font-sans);
+}
+.nav-btn:hover { background: var(–forest-light); transform: translateY(-1px); }
+
+/* ── HERO ── */
+#hero {
+min-height: 100vh;
+background: var(–cream);
+display: grid;
+grid-template-columns: 1fr;
+align-items: center;
+position: relative;
+overflow: hidden;
+padding: 100px 48px 60px;
+}
+@media(min-width:900px){
+#hero { grid-template-columns: 1fr 1fr; gap: 60px; }
+}
+
+/* Decorative diagonal stripe */
+#hero::before {
+content: ‘’;
+position: absolute;
+top: 0; right: -10%;
+width: 55%;
+height: 100%;
+background: var(–paper);
+clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+z-index: 0;
+}
+
+.hero-text {
+position: relative;
+z-index: 2;
+max-width: 520px;
+}
+.hero-eyebrow {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 28px;
+font-size: 0.75rem;
+font-weight: 500;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–forest);
+opacity: 0;
+animation: slideRight 0.8s 0.2s ease forwards;
+}
+.hero-eyebrow span {
+display: block;
+width: 28px; height: 1px;
+background: var(–forest);
+}
+.hero-kicker {
+font-family: var(–font-serif);
+font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+font-weight: 900;
+line-height: 1.18;
+letter-spacing: -0.01em;
+color: var(–charcoal);
+margin-bottom: 12px;
+opacity: 0;
+animation: slideRight 0.8s 0.35s ease forwards;
+}
+.hero-kicker em {
+font-style: normal;
+color: var(–forest);
+position: relative;
+display: inline-block;
+}
+.hero-kicker em::after {
+content: ‘’;
+position: absolute;
+bottom: 4px; left: 0; right: 0;
+height: 6px;
+background: var(–gold-light);
+opacity: 0.5;
+z-index: -1;
+border-radius: 2px;
+}
+.hero-sub {
+font-size: 1.05rem;
+line-height: 1.9;
+color: var(–brown-dark);
+margin-bottom: 44px;
+font-weight: 300;
+opacity: 0;
+animation: slideRight 0.8s 0.5s ease forwards;
+}
+.hero-actions {
+display: flex;
+flex-direction: column;
+gap: 14px;
+align-items: flex-start;
+opacity: 0;
+animation: slideRight 0.8s 0.65s ease forwards;
+}
+@media(min-width:480px){ .hero-actions { flex-direction: row; align-items: center; } }
+
+.btn-forest {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+background: var(–forest);
+color: var(–cream);
+padding: 16px 32px;
+border-radius: var(–radius-sm);
+font-family: var(–font-sans);
+font-size: 0.9rem;
+font-weight: 500;
+text-decoration: none;
+letter-spacing: 0.04em;
+transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+white-space: nowrap;
+border: none;
+cursor: pointer;
+}
+.btn-forest:hover { background: var(–forest-light); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(45,74,62,0.25); }
+.btn-forest svg { transition: transform 0.3s; }
+.btn-forest:hover svg { transform: translateX(4px); }
+
+.btn-outline {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+background: transparent;
+color: var(–brown-dark);
+padding: 16px 28px;
+border-radius: var(–radius-sm);
+font-family: var(–font-sans);
+font-size: 0.9rem;
+font-weight: 400;
+text-decoration: none;
+letter-spacing: 0.04em;
+transition: all 0.25s;
+border: 1.5px solid var(–tan);
+white-space: nowrap;
+cursor: pointer;
+}
+.btn-outline:hover { border-color: var(–brown); color: var(–brown-dark); background: var(–paper); }
+
+.hero-trust {
+margin-top: 52px;
+opacity: 0;
+animation: slideRight 0.8s 0.8s ease forwards;
+}
+.hero-trust-label {
+font-size: 0.72rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–brown-light);
+margin-bottom: 12px;
+}
+.hero-trust-tags {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+}
+.trust-tag {
+padding: 5px 12px;
+background: var(–paper);
+border: 1px solid var(–tan);
+border-radius: 100px;
+font-size: 0.78rem;
+color: var(–brown-dark);
+letter-spacing: 0.03em;
+}
+
+/* Hero visual side */
+.hero-visual {
+position: relative;
+z-index: 2;
+display: none;
+}
+@media(min-width:900px){ .hero-visual { display: block; } }
+
+.mockup-browser {
+background: var(–warm-white);
+border: 1.5px solid var(–tan);
+border-radius: var(–radius);
+overflow: hidden;
+box-shadow: 0 24px 80px rgba(92,68,48,0.12), 0 4px 16px rgba(92,68,48,0.06);
+opacity: 0;
+animation: slideUp 1s 0.4s ease forwards;
+}
+.browser-bar {
+background: var(–paper);
+border-bottom: 1px solid var(–tan);
+padding: 12px 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.browser-dots { display: flex; gap: 6px; }
+.browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #FF5F57; }
+.dot-y { background: #FEBC2E; }
+.dot-g { background: #28C840; }
+.browser-url {
+flex: 1;
+background: var(–cream);
+border: 1px solid var(–tan);
+border-radius: 4px;
+padding: 4px 12px;
+font-size: 0.72rem;
+color: var(–brown);
+letter-spacing: 0.02em;
+}
+.browser-body { padding: 24px; }
+
+/* Mini site mockup inside browser */
+.mini-header {
+background: var(–forest);
+border-radius: var(–radius-sm);
+padding: 16px 20px;
+margin-bottom: 16px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.mini-logo { font-size: 0.8rem; font-weight: 700; color: var(–gold-light); font-family: var(–font-serif); }
+.mini-nav { display: flex; gap: 12px; }
+.mini-nav span { font-size: 0.6rem; color: rgba(255,255,255,0.6); }
+
+.mini-hero {
+background: var(–paper);
+border-radius: var(–radius-sm);
+padding: 20px;
+margin-bottom: 12px;
+}
+.mini-tag { font-size: 0.55rem; color: var(–forest); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.mini-h1 { font-family: var(–font-serif); font-size: 0.85rem; font-weight: 700; color: var(–charcoal); line-height: 1.4; margin-bottom: 8px; }
+.mini-p { font-size: 0.6rem; color: var(–brown-dark); line-height: 1.6; margin-bottom: 12px; }
+.mini-btn { display: inline-block; padding: 5px 14px; background: var(–forest); color: white; border-radius: 4px; font-size: 0.6rem; }
+
+.mini-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.mini-card { background: var(–warm-white); border: 1px solid var(–tan); border-radius: 6px; padding: 10px 8px; text-align: center; }
+.mini-card-icon { font-size: 1rem; margin-bottom: 4px; }
+.mini-card-t { font-size: 0.55rem; font-weight: 600; color: var(–charcoal); margin-bottom: 2px; }
+.mini-card-d { font-size: 0.5rem; color: var(–brown-light); }
+
+/* Floating badge on mockup */
+.mockup-badge {
+position: absolute;
+bottom: -16px; left: -20px;
+background: var(–gold);
+color: var(–charcoal);
+border-radius: var(–radius);
+padding: 14px 20px;
+font-size: 0.78rem;
+font-weight: 600;
+box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+opacity: 0;
+animation: slideUp 0.8s 0.8s ease forwards;
+white-space: nowrap;
+}
+.mockup-badge strong { display: block; font-size: 1.2rem; font-family: var(–font-serif); }
+
+@keyframes slideRight { from{opacity:0;transform:translateX(-24px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideUp    { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── MARQUEE ── */
+.marquee-strip {
+background: var(–forest);
+overflow: hidden;
+padding: 14px 0;
+position: relative;
+}
+.marquee-track {
+display: flex;
+gap: 0;
+animation: marquee 22s linear infinite;
+width: max-content;
+}
+.marquee-item {
+display: flex;
+align-items: center;
+gap: 20px;
+padding: 0 32px;
+white-space: nowrap;
+font-size: 0.78rem;
+font-weight: 500;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.7);
+}
+.marquee-dot { width: 4px; height: 4px; background: var(–gold); border-radius: 50%; }
+@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SECTION BASE ── */
+section { padding: 100px 48px; }
+.container { max-width: 1080px; margin: 0 auto; }
+
+.label {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-size: 0.72rem;
+font-weight: 500;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–forest);
+margin-bottom: 18px;
+}
+.label::before { content: ‘’; width: 20px; height: 1px; background: var(–forest); }
+
+.title-serif {
+font-family: var(–font-serif);
+font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+font-weight: 700;
+line-height: 1.35;
+color: var(–charcoal);
+letter-spacing: -0.01em;
+margin-bottom: 20px;
+}
+.body-text {
+font-size: 1rem;
+line-height: 1.9;
+color: var(–brown-dark);
+font-weight: 300;
+max-width: 540px;
+}
+
+/* ── STRENGTHS ── */
+#strengths { background: var(–paper); }
+.strengths-layout {
+display: grid;
+gap: 16px;
+}
+@media(min-width:700px){ .strengths-layout { grid-template-columns: 1fr 1fr; } }
+@media(min-width:1000px){ .strengths-layout { grid-template-columns: repeat(3,1fr); } }
+
+.s-header { margin-bottom: 56px; }
+
+.str-card {
+background: var(–warm-white);
+border: 1px solid var(–tan);
+border-radius: var(–radius);
+padding: 36px 32px;
+position: relative;
+transition: transform 0.35s, box-shadow 0.35s;
+overflow: hidden;
+}
+.str-card::before {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+height: 3px;
+background: var(–forest);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.4s ease;
+}
+.str-card:hover { transform: translateY(-5px); box-shadow: 0 16px 48px rgba(92,68,48,0.1); }
+.str-card:hover::before { transform: scaleX(1); }
+
+.str-num {
+font-family: var(–font-serif);
+font-size: 3.5rem;
+font-weight: 900;
+color: var(–tan);
+line-height: 1;
+margin-bottom: 20px;
+letter-spacing: -0.03em;
+}
+.str-title {
+font-family: var(–font-serif);
+font-size: 1.2rem;
+font-weight: 700;
+color: var(–charcoal);
+margin-bottom: 12px;
+}
+.str-desc {
+font-size: 0.9rem;
+line-height: 1.85;
+color: var(–brown-dark);
+font-weight: 300;
+margin-bottom: 20px;
+}
+.str-pill {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+background: rgba(45,74,62,0.08);
+color: var(–forest);
+padding: 5px 12px;
+border-radius: 100px;
+font-size: 0.75rem;
+font-weight: 500;
+letter-spacing: 0.04em;
+}
+
+/* ── WORKFLOW ── */
+#workflow { background: var(–cream); }
+.workflow-grid {
+display: grid;
+gap: 60px;
+align-items: center;
+}
+@media(min-width:860px){ .workflow-grid { grid-template-columns: 1fr 1fr; } }
+
+.steps-list {
+display: flex;
+flex-direction: column;
+gap: 0;
+margin-top: 40px;
+position: relative;
+}
+.steps-list::before {
+content: ‘’;
+position: absolute;
+left: 20px; top: 40px; bottom: 40px;
+width: 1px;
+background: var(–tan);
+}
+
+.step {
+display: flex;
+gap: 24px;
+padding: 24px 0;
+position: relative;
+}
+.step-num {
+width: 40px; height: 40px;
+background: var(–warm-white);
+border: 1.5px solid var(–tan);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: var(–font-serif);
+font-size: 0.85rem;
+font-weight: 700;
+color: var(–forest);
+flex-shrink: 0;
+position: relative;
+z-index: 1;
+transition: background 0.3s, border-color 0.3s;
+}
+.step:hover .step-num { background: var(–forest); border-color: var(–forest); color: var(–cream); }
+.step-body { padding-top: 8px; }
+.step-body h4 { font-family: var(–font-serif); font-size: 1.05rem; font-weight: 700; color: var(–charcoal); margin-bottom: 6px; }
+.step-body p { font-size: 0.88rem; color: var(–brown-dark); line-height: 1.75; font-weight: 300; }
+
+/* Phone mockup */
+.phone-wrap {
+display: flex;
+justify-content: center;
+}
+.phone {
+width: 240px;
+background: var(–charcoal);
+border-radius: 36px;
+padding: 16px 12px;
+box-shadow: 0 32px 80px rgba(30,26,22,0.25), 0 0 0 1px rgba(255,255,255,0.05);
+position: relative;
+}
+.phone-notch {
+width: 80px; height: 24px;
+background: var(–charcoal);
+border-radius: 12px;
+margin: 0 auto 12px;
+border: 2px solid rgba(255,255,255,0.08);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 6px;
+}
+.notch-cam { width: 8px; height: 8px; background: #333; border-radius: 50%; border: 1px solid #555; }
+.notch-speaker { width: 32px; height: 3px; background: #333; border-radius: 2px; }
+.phone-screen {
+background: #E9F3EF;
+border-radius: 24px;
+overflow: hidden;
+min-height: 420px;
+}
+.line-header {
+background: #06C755;
+padding: 10px 14px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.line-avatar { width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: #06C755; }
+.line-name { font-size: 0.7rem; font-weight: 600; color: white; }
+.line-status { font-size: 0.55rem; color: rgba(255,255,255,0.8); }
+.line-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.lmsg { max-width: 80%; }
+.lmsg-bubble {
+padding: 8px 12px;
+border-radius: 12px;
+font-size: 0.68rem;
+line-height: 1.55;
+}
+.lmsg.from-user { align-self: flex-end; }
+.lmsg.from-user .lmsg-bubble { background: #06C755; color: white; border-radius: 12px 12px 2px 12px; }
+.lmsg.from-bot .lmsg-bubble { background: white; color: #333; border-radius: 12px 12px 12px 2px; }
+.lmsg-time { font-size: 0.5rem; color: #aaa; margin-top: 3px; text-align: right; }
+.lmsg.from-bot .lmsg-time { text-align: left; }
+.lmsg strong { color: #06C755; }
+
+/* ── PRICING ── */
+#pricing { background: var(–forest); }
+.pricing-inner { text-align: center; max-width: 700px; margin: 0 auto; }
+.pricing-inner .label { color: var(–gold-light); justify-content: center; }
+.pricing-inner .label::before { background: var(–gold-light); }
+.pricing-inner .title-serif { color: var(–cream); }
+.pricing-sub-text { font-size: 1rem; color: rgba(250,247,242,0.65); line-height: 1.85; font-weight: 300; margin-bottom: 56px; }
+
+.price-box {
+background: var(–cream);
+border-radius: var(–radius-lg);
+padding: 52px 48px;
+position: relative;
+overflow: hidden;
+text-align: left;
+box-shadow: 0 32px 80px rgba(0,0,0,0.2);
+}
+.price-box::after {
+content: ‘SIMPLE PLAN’;
+position: absolute;
+top: 28px; right: -24px;
+background: var(–gold);
+color: var(–charcoal);
+font-size: 0.65rem;
+font-weight: 700;
+letter-spacing: 0.12em;
+padding: 6px 36px;
+transform: rotate(45deg);
+transform-origin: center;
+}
+.price-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(–brown); margin-bottom: 12px; }
+.price-display {
+display: flex;
+align-items: flex-start;
+gap: 4px;
+margin-bottom: 8px;
+line-height: 1;
+}
+.price-yen { font-family: var(–font-serif); font-size: 2rem; font-weight: 700; color: var(–charcoal); margin-top: 8px; }
+.price-num { font-family: var(–font-serif); font-size: 5rem; font-weight: 900; color: var(–charcoal); }
+.price-per { font-size: 1rem; color: var(–brown); align-self: flex-end; margin-bottom: 12px; }
+.price-note { font-size: 0.8rem; color: var(–brown); margin-bottom: 36px; }
+.price-divider { height: 1px; background: var(–tan); margin-bottom: 32px; }
+.price-feats { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+.price-feats li {
+display: flex;
+gap: 14px;
+align-items: flex-start;
+font-size: 0.9rem;
+color: var(–ink);
+line-height: 1.55;
+}
+.feat-check {
+width: 20px; height: 20px;
+background: var(–forest);
+border-radius: 50%;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-top: 1px;
+}
+.feat-check svg { width: 10px; height: 10px; }
+.price-cta {
+display: block;
+text-align: center;
+padding: 18px;
+background: var(–forest);
+color: var(–cream);
+border-radius: var(–radius-sm);
+font-size: 1rem;
+font-weight: 500;
+letter-spacing: 0.04em;
+text-decoration: none;
+transition: background 0.25s, transform 0.2s;
+border: none;
+cursor: pointer;
+font-family: var(–font-sans);
+}
+.price-cta:hover { background: var(–forest-light); transform: translateY(-2px); }
+.price-fine { text-align: center; margin-top: 18px; font-size: 0.78rem; color: var(–brown); }
+
+/* ── CTA ── */
+#cta {
+background: var(–cream);
+position: relative;
+overflow: hidden;
+}
+#cta::before {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+height: 50%;
+background: var(–paper);
+z-index: 0;
+}
+.cta-card {
+position: relative;
+z-index: 1;
+background: var(–charcoal);
+border-radius: var(–radius-lg);
+padding: 72px 56px;
+display: grid;
+gap: 48px;
+align-items: center;
+overflow: hidden;
+}
+@media(min-width:760px){ .cta-card { grid-template-columns: 1fr auto; } }
+
+/* Subtle pattern on CTA */
+.cta-card::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background-image:
+radial-gradient(circle at 20% 80%, rgba(45,74,62,0.4) 0%, transparent 50%),
+radial-gradient(circle at 80% 20%, rgba(201,168,76,0.15) 0%, transparent 50%);
+pointer-events: none;
+}
+.cta-text { position: relative; z-index: 1; }
+.cta-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(–gold-light); margin-bottom: 16px; }
+.cta-title {
+font-family: var(–font-serif);
+font-size: clamp(1.6rem, 3vw, 2.4rem);
+font-weight: 700;
+color: var(–cream);
+line-height: 1.4;
+margin-bottom: 16px;
+}
+.cta-desc { font-size: 0.95rem; color: rgba(250,247,242,0.6); line-height: 1.8; font-weight: 300; }
+.cta-buttons {
+position: relative;
+z-index: 1;
+display: flex;
+flex-direction: column;
+gap: 12px;
+flex-shrink: 0;
+}
+.btn-gold {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+background: var(–gold);
+color: var(–charcoal);
+padding: 16px 32px;
+border-radius: var(–radius-sm);
+font-size: 0.9rem;
+font-weight: 600;
+letter-spacing: 0.04em;
+text-decoration: none;
+transition: background 0.25s, transform 0.2s;
+white-space: nowrap;
+border: none;
+cursor: pointer;
+font-family: var(–font-sans);
+}
+.btn-gold:hover { background: var(–gold-light); transform: translateY(-2px); }
+.btn-ghost {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+background: transparent;
+color: rgba(250,247,242,0.8);
+padding: 16px 32px;
+border-radius: var(–radius-sm);
+font-size: 0.9rem;
+font-weight: 400;
+letter-spacing: 0.04em;
+text-decoration: none;
+transition: all 0.25s;
+border: 1.5px solid rgba(250,247,242,0.2);
+white-space: nowrap;
+cursor: pointer;
+font-family: var(–font-sans);
+}
+.btn-ghost:hover { border-color: rgba(250,247,242,0.5); color: var(–cream); background: rgba(255,255,255,0.05); }
+
+.cta-assure {
+text-align: center;
+margin-top: 28px;
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+justify-content: center;
+position: relative;
+z-index: 1;
+}
+.assure-item { font-size: 0.78rem; color: rgba(250,247,242,0.45); display: flex; align-items: center; gap: 6px; }
+.assure-item::before { content: ‘✓’; color: var(–gold); }
+
+/* ── FOOTER ── */
+footer {
+background: var(–paper);
+border-top: 1px solid var(–tan);
+padding: 56px 48px 32px;
+}
+.footer-grid {
+max-width: 1080px;
+margin: 0 auto;
+display: grid;
+gap: 40px;
+margin-bottom: 48px;
+}
+@media(min-width:640px){ .footer-grid { grid-template-columns: 1fr 1fr; } }
+.footer-brand a {
+font-family: var(–font-serif);
+font-size: 1.3rem;
+font-weight: 700;
+color: var(–charcoal);
+text-decoration: none;
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 14px;
+}
+.footer-tagline { font-size: 0.85rem; color: var(–brown); line-height: 1.7; font-weight: 300; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 0.85rem; color: var(–brown); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(–forest); }
+.footer-bottom {
+max-width: 1080px;
+margin: 0 auto;
+padding-top: 28px;
+border-top: 1px solid var(–tan);
+display: flex;
+flex-direction: column;
+gap: 8px;
+align-items: center;
+text-align: center;
+}
+@media(min-width:600px){ .footer-bottom { flex-direction: row; justify-content: space-between; } }
+.footer-copy { font-size: 0.75rem; color: var(–brown-light); }
+.footer-domain { font-family: var(–font-serif); font-size: 0.75rem; color: var(–brown-light); letter-spacing: 0.06em; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+.reveal.on { opacity: 1; transform: translateY(0); }
+.delay1 { transition-delay: 0.1s; }
+.delay2 { transition-delay: 0.2s; }
+.delay3 { transition-delay: 0.3s; }
+
+/* ── LINE FLOAT ── */
+.float-line {
+position: fixed;
+bottom: 24px; right: 24px;
+z-index: 400;
+background: #06C755;
+width: 56px; height: 56px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: 0 6px 24px rgba(6,199,85,0.4);
+text-decoration: none;
+transition: transform 0.2s, box-shadow 0.2s;
+}
+.float-line:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(6,199,85,0.5); }
+
+/* Mobile padding */
+@media(max-width:600px){
+section, nav, footer { padding-left: 24px; padding-right: 24px; }
+#hero { padding: 100px 24px 60px; }
+.cta-card { padding: 40px 28px; }
+.price-box { padding: 36px 28px; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="cur-ring"></div>
+
+<!-- LINE FLOAT -->
+
+<a href="#" class="float-line" title="LINEでお問い合わせ">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+  </svg>
+</a>
+
+<!-- NAV -->
+
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">F</div>
+    フューロン
+  </a>
+  <ul class="nav-links">
+    <li><a href="#strengths">強み</a></li>
+    <li><a href="#workflow">サービス</a></li>
+    <li><a href="#pricing">料金</a></li>
+    <li><a href="#cta">相談する</a></li>
+  </ul>
+  <a href="#cta" class="nav-btn">無料相談</a>
+</nav>
+
+<!-- ── HERO ── -->
+
+<section id="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow"><span></span>地域密着型 Web制作サービス</div>
+    <h1 class="hero-kicker">
+      地元の商売を、<br>
+      <em>もっと強く。</em>
+    </h1>
+    <p class="hero-sub">
+      Webサイトがあれば、お店は24時間営業できます。<br>
+      フューロンが制作から運用・集客分析まで、<br>すべてサポートします。
+    </p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-forest">
+        無料でオンライン面談を予約
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="#" class="btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        資料を請求する
+      </a>
+    </div>
+    <div class="hero-trust">
+      <div class="hero-trust-label">こんなお店に選ばれています</div>
+      <div class="hero-trust-tags">
+        <span class="trust-tag">飲食店・カフェ</span>
+        <span class="trust-tag">整体・サロン</span>
+        <span class="trust-tag">小売店</span>
+        <span class="trust-tag">美容室</span>
+        <span class="trust-tag">クリニック</span>
+        <span class="trust-tag">工務店</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div style="position:relative;">
+      <div class="mockup-browser">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <div class="browser-dot dot-r"></div>
+            <div class="browser-dot dot-y"></div>
+            <div class="browser-dot dot-g"></div>
+          </div>
+          <div class="browser-url">fewron.jp/demo/sakura-bistro</div>
+        </div>
+        <div class="browser-body">
+          <div class="mini-header">
+            <div class="mini-logo">さくらビストロ</div>
+            <div class="mini-nav">
+              <span>メニュー</span><span>アクセス</span><span>予約</span>
+            </div>
+          </div>
+          <div class="mini-hero">
+            <div class="mini-tag">地元で愛される味</div>
+            <div class="mini-h1">旬の食材を使った<br>こだわりのランチ</div>
+            <div class="mini-p">毎日仕入れる新鮮な地元野菜と、<br>シェフ自慢の自家製ソース。</div>
+            <div class="mini-btn">今すぐ予約する</div>
+          </div>
+          <div class="mini-cards">
+            <div class="mini-card">
+              <div class="mini-card-icon">🍽</div>
+              <div class="mini-card-t">ランチ</div>
+              <div class="mini-card-d">11:00-14:30</div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-icon">🍷</div>
+              <div class="mini-card-t">ディナー</div>
+              <div class="mini-card-d">17:00-22:00</div>
+            </div>
+            <div class="mini-card">
+              <div class="mini-card-icon">📍</div>
+              <div class="mini-card-t">アクセス</div>
+              <div class="mini-card-d">駅から3分</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mockup-badge">
+        <strong>即日</strong>でデモ提案
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <div class="marquee-item">最短即日でデモサイト提案<div class="marquee-dot"></div></div>
+    <div class="marquee-item">月額 ¥4,980（税込）<div class="marquee-dot"></div></div>
+    <div class="marquee-item">LINEで修正依頼OK<div class="marquee-dot"></div></div>
+    <div class="marquee-item">AIが集客課題を分析<div class="marquee-dot"></div></div>
+    <div class="marquee-item">初期費用・契約縛りなし<div class="marquee-dot"></div></div>
+    <div class="marquee-item">24時間サポート<div class="marquee-dot"></div></div>
+    <div class="marquee-item">最短即日でデモサイト提案<div class="marquee-dot"></div></div>
+    <div class="marquee-item">月額 ¥4,980（税込）<div class="marquee-dot"></div></div>
+    <div class="marquee-item">LINEで修正依頼OK<div class="marquee-dot"></div></div>
+    <div class="marquee-item">AIが集客課題を分析<div class="marquee-dot"></div></div>
+    <div class="marquee-item">初期費用・契約縛りなし<div class="marquee-dot"></div></div>
+    <div class="marquee-item">24時間サポート<div class="marquee-dot"></div></div>
+  </div>
+</div>
+
+<!-- ── STRENGTHS ── -->
+
+<section id="strengths">
+  <div class="container">
+    <div class="s-header reveal">
+      <div class="label">Our Strengths</div>
+      <h2 class="title-serif">選ばれる、3つの理由。</h2>
+      <p class="body-text">難しい操作も、専門知識も要りません。あなたは経営に集中してください。</p>
+    </div>
+    <div class="strengths-layout">
+      <div class="str-card reveal delay1">
+        <div class="str-num">01</div>
+        <h3 class="str-title">圧倒的スピード</h3>
+        <p class="str-desc">AIを活用することで、最短即日でデモサイトをご提案。「どんなサイトになるか」をすぐに確認できます。承認後、最短3日で本番公開。</p>
+        <span class="str-pill">⚡ 最短即日提案</span>
+      </div>
+      <div class="str-card reveal delay2">
+        <div class="str-num">02</div>
+        <h3 class="str-title">驚きの低コスト</h3>
+        <p class="str-desc">月額4,980円（税込）のみ。複雑な初期費用は一切なし。制作費・サーバー代・ドメイン代・修正対応、すべて含まれています。</p>
+        <span class="str-pill">💰 初期費用ゼロ</span>
+      </div>
+      <div class="str-card reveal delay3">
+        <div class="str-num">03</div>
+        <h3 class="str-title">LINEで完結</h3>
+        <p class="str-desc">文章の変更・写真の差し替え・営業時間の更新——すべてLINEに送るだけ。面倒なメールも専用システムへのログインも不要。</p>
+        <span class="str-pill">💬 LINE対応</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WORKFLOW ── -->
+
+<section id="workflow">
+  <div class="container">
+    <div class="workflow-grid">
+      <div class="reveal">
+        <div class="label">How It Works</div>
+        <h2 class="title-serif">「引き算」の<br>Web運用</h2>
+        <p class="body-text" style="margin-bottom:0">難しい解析ツールは不要。AIが課題を特定し、わかりやすい言葉で改善案を届けます。</p>
+        <div class="steps-list">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>LINEで気になることを送る</h4>
+              <p>「最近お客さんが減った」「メニューを変えたい」普段の言葉でOK。</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>AIが課題を分析・言語化</h4>
+              <p>アクセスデータと照合し、問題の本質を整理。専門用語は使いません。</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>改善案レポートをお届け</h4>
+              <p>毎月、あなたの店舗に合わせた具体的なアクションプランをお送りします。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+```
+  <div class="phone-wrap reveal delay2">
+    <div class="phone">
+      <div class="phone-notch">
+        <div class="notch-cam"></div>
+        <div class="notch-speaker"></div>
+      </div>
+      <div class="phone-screen">
+        <div class="line-header">
+          <div class="line-avatar">F</div>
+          <div>
+            <div class="line-name">Fewron サポート</div>
+            <div class="line-status">オンライン</div>
+          </div>
+        </div>
+        <div class="line-body">
+          <div class="lmsg from-user">
+            <div class="lmsg-bubble">最近ランチのお客さんが減った気がします…</div>
+            <div class="lmsg-time">14:23</div>
+          </div>
+          <div class="lmsg from-bot">
+            <div class="lmsg-bubble">ご連絡ありがとうございます！サイトを確認したところ、<strong>ランチページへの流入が-23%</strong>になっていました📊</div>
+            <div class="lmsg-time">14:24</div>
+          </div>
+          <div class="lmsg from-bot">
+            <div class="lmsg-bubble">Googleマップの口コミ返信と、メニュー写真の更新が効果的です。文章もご用意しますね✨</div>
+            <div class="lmsg-time">14:24</div>
+          </div>
+          <div class="lmsg from-user">
+            <div class="lmsg-bubble">ありがとうございます！お願いします🙏</div>
+            <div class="lmsg-time">14:26</div>
+          </div>
+          <div class="lmsg from-bot">
+            <div class="lmsg-bubble">承りました！本日中に修正してサイトに反映します。</div>
+            <div class="lmsg-time">14:26</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+
+<section id="pricing">
+  <div class="container">
+    <div class="pricing-inner">
+      <div class="label">Pricing</div>
+      <h2 class="title-serif">シンプルな料金、<br>すべて込みの安心。</h2>
+      <p class="pricing-sub-text">初期費用なし。隠れた費用なし。月々の定額だけで、プロのWeb運用が続きます。</p>
+
+```
+  <div class="price-box reveal">
+    <div class="price-label">シンプルプラン</div>
+    <div class="price-display">
+      <span class="price-yen">¥</span>
+      <span class="price-num">4,980</span>
+      <span class="price-per">/ 月</span>
+    </div>
+    <div class="price-note">税込価格 · 月々お支払い</div>
+    <div class="price-divider"></div>
+    <ul class="price-feats">
+      <li>
+        <span class="feat-check"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="2,5 4,8 8,2"/></svg></span>
+        <span><strong>Webサイト制作</strong>：プロ品質のサイトをゼロから。デザインはあなたの店舗に合わせて提案。</span>
+      </li>
+      <li>
+        <span class="feat-check"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="2,5 4,8 8,2"/></svg></span>
+        <span><strong>サーバー・ドメイン維持</strong>：技術的な管理はすべてフューロンが担当。</span>
+      </li>
+      <li>
+        <span class="feat-check"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="2,5 4,8 8,2"/></svg></span>
+        <span><strong>LINE修正対応</strong>：文章・写真・メニューの変更をLINEで即対応。</span>
+      </li>
+      <li>
+        <span class="feat-check"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="2,5 4,8 8,2"/></svg></span>
+        <span><strong>月次AIレポート</strong>：集客課題を分析し、改善案をわかりやすく提案。</span>
+      </li>
+      <li>
+        <span class="feat-check"><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="2,5 4,8 8,2"/></svg></span>
+        <span><strong>24時間サポート</strong>：いつでも安心してLINEでご相談いただけます。</span>
+      </li>
+    </ul>
+    <a href="#cta" class="price-cta">まずは無料オンライン面談を予約する →</a>
+    <div class="price-fine">初期費用なし ・ 契約縛りなし ・ いつでも解約可能</div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+
+<section id="cta">
+  <div class="container">
+    <div class="cta-card reveal">
+      <div class="cta-text">
+        <div class="cta-label">Get Started</div>
+        <h2 class="cta-title">まず、話しましょう。<br>30分、完全無料。</h2>
+        <p class="cta-desc">
+          「うちにWebサイトが必要かわからない」<br>
+          そんな素朴な疑問でも大丈夫。<br>
+          費用も、準備も、一切要りません。
+        </p>
+        <div class="cta-assure">
+          <div class="assure-item">完全無料</div>
+          <div class="assure-item">強引な勧誘なし</div>
+          <div class="assure-item">即日対応</div>
+          <div class="assure-item">スマホだけでOK</div>
+        </div>
+      </div>
+      <div class="cta-buttons">
+        <a href="#" class="btn-gold">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          オンライン面談を予約
+        </a>
+        <a href="#" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          資料を請求する（PDF）
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#">
+        <div class="nav-logo-mark">F</div>
+        フューロン
+      </a>
+      <p class="footer-tagline">
+        地元の商売を、もっと強く。<br>
+        Webサイト制作から集客分析まで、<br>
+        フューロンがまるごとサポートします。<br><br>
+        fewron.jp
+      </p>
+    </div>
+    <div>
+      <ul class="footer-links">
+        <li><a href="#strengths">私たちの強み</a></li>
+        <li><a href="#workflow">サービス内容</a></li>
+        <li><a href="#pricing">料金プラン</a></li>
+        <li><a href="#cta">お問い合わせ</a></li>
+        <li><a href="#">特定商取引法に基づく表記</a></li>
+        <li><a href="#">プライバシーポリシー</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Fewron（フューロン）. All rights reserved.</div>
+    <div class="footer-domain">fewron.jp</div>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cur');
+  const curRing = document.getElementById('cur-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cur.style.left = mx + 'px';
+    cur.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    curRing.style.left = rx + 'px';
+    curRing.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.addEventListener('mouseleave', () => { cur.style.opacity = '0'; curRing.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { cur.style.opacity = '1'; curRing.style.opacity = '0.6'; });
+
+  // Navbar scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => obs.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const t = document.querySelector(this.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
+
+</body>
+</html>
